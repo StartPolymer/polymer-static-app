@@ -1,44 +1,21 @@
-# Polymer Starter Kit
+# Polymer Static App
 
-[![Join the chat at https://gitter.im/StartPolymer/polymer-starter-kit](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/StartPolymer/polymer-starter-kit?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+Polymer [Static Web Application](http://www.staticapps.org)
+boilerplate based on [Polymer Starter Kit](https://github.com/StartPolymer/polymer-starter-kit)
+and [Metalsmith](http://www.metalsmith.io).
 
-Polymer Starter Kit is a boilerplate for web development using Web Components and modern tools.
-
-Keeping up to date with
-[Web Starter Kit](https://github.com/google/web-starter-kit),
-[HTML5 Boilerplate](https://github.com/h5bp/html5-boilerplate),
-[Polymer generator](https://github.com/yeoman/generator-polymer) and
-[Gulp generator](https://github.com/yeoman/generator-gulp-webapp).
-
-Following [The 10 Commandments of Modern Web Application](https://gist.github.com/JosefJezek/8020bd8f02c4992e7d7d)
-
-:sparkles: [DEMO](http://polymer-starter-kit.startpolymer.org) :sparkles:
+:sparkles: [DEMO](http://polymer-static-app.startpolymer.org) :sparkles:
 
 ## Features
 
-- Clean [index.html](https://github.com/StartPolymer/polymer-starter-kit/blob/master/app/index.html)
-- [Gulp tasks](https://github.com/StartPolymer/polymer-starter-kit/tree/master/gulp/tasks) per file
-- Using [Polymer Demo](https://github.com/StartPolymer/polymer-demo) element with [Polymer Theme](https://github.com/StartPolymer/polymer-theme) based on [BEM Methodology](http://getbem.com)
-- [Sass](http://sass-lang.com) CSS Preprocessor with [Ruby](https://www.ruby-lang.org)
- - PSK need CSS Preprocessor for [Variables](http://sass-guidelin.es/#variables),
- [Loops](http://sass-guidelin.es/#loops),
- [Mixins](http://sass-guidelin.es/#mixins) and other features
- - [LibSass](http://libsass.org) is a C/C++ port of the Sass engine
-   - [Replace Ruby Sass with LibSass](https://github.com/StartPolymer/polymer-starter-kit/issues/2) issue
- - SCSS have CSS like syntax
- - Check out the [styles](https://github.com/StartPolymer/polymer-starter-kit/tree/master/app/styles) dir
-- Ready to use any template engine
- - [How to add any template engine](https://github.com/StartPolymer/polymer-starter-kit/wiki/How-to-add-any-template-engine) for any developers
-- [Autoprefixer](https://github.com/postcss/autoprefixer) for CSS
-- [Asset revisioning](https://github.com/smysnk/gulp-rev-all)
-for CSS, HTML and JS by appending content hash to their filenames
-- [Compress text files with Pako](https://github.com/jameswyse/gulp-pako)
-for avoiding the overhead of on-the-fly compression on server
-- [PageSpeed Insights](https://developers.google.com/speed/docs/insights/about) for performance tuning
-- Built-in preview server with [BrowserSync](http://www.browsersync.io)
-- Automagically wire-up dependencies installed with [Bower](http://bower.io)
-- [Vulcanize with Content Security Policy](https://github.com/Polymer/vulcanize#content-security-policy)
-- [web-component-tester](https://github.com/Polymer/web-component-tester) support
+- Content in [Markdown format](http://commonmark.org) parsed by
+[markdown-it](https://markdown-it.github.io)
+- [Jade](http://jade-lang.com) HTML template engine
+ - Jade have [Variables](http://jade-lang.com/reference/code/),
+ [Includes](http://jade-lang.com/reference/includes/),
+ [Extends](http://jade-lang.com/reference/extends/),
+ [Mixins](http://jade-lang.com/reference/mixins/) and other features
+ - [Learning Jade with Codecast](http://cssdeck.com/labs/learning-the-jade-templating-engine-syntax)
 - Quick deploy to [CDN](http://en.wikipedia.org/wiki/Content_delivery_network) Hosting
  - [GitHub Pages](https://pages.github.com) - [more info](https://github.com/blog/1715-faster-more-awesome-github-pages)
 
@@ -65,21 +42,21 @@ sudo gem install sass
 
 ## Usage
 
-### [Fork](https://github.com/StartPolymer/polymer-starter-kit/fork) this repository
+### [Fork](https://github.com/StartPolymer/polymer-static-app/fork) this repository
 
 [Syncing a fork](https://help.github.com/articles/syncing-a-fork/)
 of a repository to keep it up-to-date with the upstream repository.
 
 or
 
-### Clone this repository to separate branch `psk`
+### Clone this repository to separate branch `psa`
 
 ```sh
-git clone https://github.com/StartPolymer/polymer-starter-kit.git <my-repo-name>
+git clone https://github.com/StartPolymer/polymer-static-app.git <my-repo-name>
 cd <my-repo-name>
-git branch -m psk
+git branch -m psa
 git checkout -b master
-git remote rename origin psk
+git remote rename origin psa
 git remote add origin https://github.com/<user>/<my-repo-name>.git
 git push -u origin master
 ```
@@ -94,7 +71,7 @@ bower install && npm install
 
 ### Check out the variables
 
-- Gulp variables are in the file [gulp/psk-config.js](https://github.com/StartPolymer/polymer-starter-kit/blob/master/gulp/psk-config.js)
+- Gulp variables are in the file [gulp/psk-config.js](https://github.com/StartPolymer/polymer-static-app/blob/master/gulp/psk-config.js)
 
 ### Serve to local and external URL
 
@@ -115,19 +92,6 @@ gulp serve:dist
 ```sh
 gulp
 ```
-
-### Build a polymer element
-
-Check out the [file structure](https://github.com/StartPolymer/polymer-demo/tree/develop/app/elements)
-of Polymer Demo element
-
-```sh
-gulp build:el
-```
-
-### Explain `psk-` prefix
-
-`psk-` prefix in file names is for git merging with `psk` branch without conflicts
 
 ## Deploy :tada:
 
@@ -157,19 +121,6 @@ gulp deploy:gh
 gulp pagespeed
 ```
 
-## Extending
-
-Use a [recipes](https://github.com/yeoman/generator-gulp-webapp/blob/master/docs/recipes/README.md)
-for integrating other popular technologies like CoffeeScript. Or this a
-[recipes](https://github.com/gulpjs/gulp/tree/master/docs/recipes).
-
-### [web-component-tester](https://github.com/Polymer/web-component-tester)
-
-```sh
-bower install web-component-tester --save-dev
-npm install web-component-tester --save-dev
-```
-
 ## Contributing :+1:
 
 1. Fork it
@@ -180,6 +131,6 @@ npm install web-component-tester --save-dev
 6. Push to the branch (`git push origin my-new-feature`)
 7. Create new Pull Request
 
-## [MIT License](https://github.com/StartPolymer/polymer-starter-kit/blob/master/LICENSE)
+## [MIT License](https://github.com/StartPolymer/polymer-static-app/blob/master/LICENSE)
 
 Copyright (c) 2015 Start Polymer ([http://startpolymer.org](http://startpolymer.org))
