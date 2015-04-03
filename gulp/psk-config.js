@@ -14,6 +14,7 @@ module.exports = {
       'BlackBerry >= 10'
     ]
   },
+
   // BrowserSync
   browserSync: {
     browser: 'default', // or ["google chrome", "firefox"]
@@ -21,12 +22,19 @@ module.exports = {
     notify: false, // The small pop-over notifications in the browser.
     port: 9000
   },
+
   // GitHub Pages
   ghPages: {
     branch: 'gh-pages',
     domain: 'polymer-starter-kit.startpolymer.org', // change it!
     origin: 'origin'
   },
+
+  // Metalsmith
+  metalsmith: {
+    configFile: './psa-config.yaml'
+  },
+
   // PageSpeed Insights
   // Please feel free to use the `nokey` option to try out PageSpeed
   // Insights as part of your build process. For more frequent use,
