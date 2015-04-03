@@ -4,7 +4,7 @@
 var gulp = require('gulp');
 var plugins = require('gulp-load-plugins')();
 var browserSync = require('browser-sync');
-var config = require('./gulp/psk-config');
+var config = require('./gulp/psa-config');
 
 // Get a task from the tasks directory with default parameters
 function getTask(task) {
@@ -25,6 +25,9 @@ gulp.task('images', getTask('images'));
 
 // Lint JavaScript
 gulp.task('jshint', require('./gulp/tasks/jshint')(gulp, plugins, browserSync));
+
+// Metalsmith
+gulp.task('metalsmith', getTask('metalsmith'));
 
 // Compile and Automatically Prefix Stylesheets
 gulp.task('styles',
