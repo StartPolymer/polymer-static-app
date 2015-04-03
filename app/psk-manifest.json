@@ -1,6 +1,6 @@
 {
-  "name": "Polymer Starter Kit",
-  "short_name": "PSK",
+  "name": "Polymer Static App",
+  "short_name": "PSA",
   "icons": [{
       "src": "/images/psk-touch/icon-128x128.png",
       "sizes": "128x128"
