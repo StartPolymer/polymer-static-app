@@ -26,13 +26,15 @@ module.exports = {
   // GitHub Pages
   ghPages: {
     branch: 'gh-pages',
-    domain: 'polymer-starter-kit.startpolymer.org', // change it!
+    domain: 'polymer-static-app.startpolymer.org', // change it!
     origin: 'origin'
   },
 
   // Metalsmith
   metalsmith: {
-    configFile: 'psa-config.yaml'
+    contentDir: 'psa-content',
+    sitemapUrl: 'http://polymer-static-app.startpolymer.org',
+    templatesDir: 'app/templates/psa'
   },
 
   // PageSpeed Insights
@@ -43,7 +45,7 @@ module.exports = {
   pageSpeed: {
     key: '', // need uncomment in task
     nokey: true,
-    site: 'http://polymer-starter-kit.startpolymer.org', // change it!
+    site: 'http://polymer-static-app.startpolymer.org', // change it!
     strategy: 'mobile' // or desktop
   }
 };
