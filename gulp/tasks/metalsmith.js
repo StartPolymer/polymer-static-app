@@ -24,7 +24,7 @@ module.exports = function(gulp, plugins, config) { return function() {
   var dateBuild = new Date();
 
   return metalsmith('./')
-    .source('app/content')
+    .source('content')
     .destination('dist')
 
     .use(each(function(file, filename) {
