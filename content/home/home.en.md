@@ -1,6 +1,5 @@
 ---
 title: Home
-template: home.jade
 ---
 
 Hi, this is my start page; neat ain't it? ;)
