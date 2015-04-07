@@ -1,5 +1,6 @@
 ---
 title: About
+slug: about
 lang: en
 template: page.jade
 ---
