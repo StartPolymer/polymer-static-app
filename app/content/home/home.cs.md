@@ -1,6 +1,5 @@
 ---
-title: Home
-lang: en
+title: Hlavní strana
 template: home.jade
 ---
 
