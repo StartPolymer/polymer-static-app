@@ -32,7 +32,7 @@ module.exports = {
 
   // Metalsmith
   metalsmith: {
-    configFile: './psa-config.yaml'
+    configFile: 'psa-config.yaml'
   },
 
   // PageSpeed Insights
