@@ -2,42 +2,53 @@
 
 // Metalsmith
 module.exports = function(gulp, plugins, config) { return function() {
-  //var assign        = require('lodash.assign');
   var metalsmith    = require('metalsmith');
   var moment        = require('moment');
 
-  //var api           = require('metalsmith-json-api');
   var branch        = require('metalsmith-branch');
   var collections   = require('metalsmith-collections');
-  //var define        = require('metalsmith-define');
   var each          = require('metalsmith-each');
   var excerpts      = require('metalsmith-excerpts');
+  var feed          = require('metalsmith-feed');
+  var ignore        = require('metalsmith-ignore');
   var markdown      = require('metalsmith-markdownit');
-  //var metadata      = require('metalsmith-metadata');
+  var metadata      = require('metalsmith-metadata');
   var permalinks    = require('metalsmith-permalinks');
+  var sitemap       = require('metalsmith-sitemap');
   var tags          = require('metalsmith-tags');
   var templates     = require('metalsmith-templates');
   var validate      = require('metalsmith-validate');
+  var wordcount     = require('metalsmith-word-count');
   var writemetadata = require('metalsmith-writemetadata');
-  //var ignore        = require('metalsmith-ignore');
 
-  var dateBuild = new Date();
+  var buildDate = new Date();
 
   return metalsmith('./')
-    .source('content')
+    .source(config.metalsmith.contentDir)
     .destination('dist')
 
+    .use(metadata({
+      site: 'metadata/site.yaml'
+    }))
+    .use(ignore('metadata/*'))
+
     .use(each(function(file, filename) {
-      file.date_build = dateBuild;
+      file.buildDate = buildDate;
       var data = filename.split('/');
       data = data[data.length - 1].split('.');
       file.name = data[0];
       file.lang = data[1];
     }))
-    //.use(metadata({
-    //  config: config.metalsmith.configFile
-    //}))
+
     .use(validate([{
+      pattern: 'home/**/*.md',
+      metadata: {
+        title: true,
+        template: {
+          default: 'home.jade'
+        }
+      }
+    }, {
       pattern: 'pages/**/*.md',
       metadata: {
         title: true,
@@ -59,23 +70,14 @@ module.exports = function(gulp, plugins, config) { return function() {
           exists: true,
           type: 'Date'
         },
-        date_modify: {
+        modifyDate: {
           exists: true,
           type: 'Date'
         },
         author: true,
-        author_url: true,
+        authorUrl: true,
         template: {
           default: 'post.jade'
-        }
-      }
-    }, {
-      // pattern defaults to '**/*'
-      metadata: {
-        template: {
-          pattern: function(value) {
-            return value.match(/\.jade$/);
-          }
         }
       }
     }]))
@@ -88,27 +90,26 @@ module.exports = function(gulp, plugins, config) { return function() {
       reverse: true
     }))
 
-    //.use(findTemplate({
-    //  pattern: 'posts',
-    //  templateName: 'post.jade'
-    //}))
     .use(markdown())
     .use(excerpts())
+
     .use(collections({
       pages: {
         pattern: 'pages/**/*.html'
       },
       posts: {
-        pattern: 'posts/**/*.html'
-        //sortBy: 'date',
-        //reverse: true
+        pattern: 'posts/**/*.html',
+        sortBy: 'date',
+        reverse: true
       }
     }))
+
     .use(templates({
       engine: 'jade',
-      directory: 'app/templates',
+      directory: config.metalsmith.templatesDir,
       moment: moment
     }))
+
     .use(branch('home/**/*.html')
       .use(permalinks({
         pattern: ':lang'
@@ -125,6 +126,26 @@ module.exports = function(gulp, plugins, config) { return function() {
         date: 'YYYYMM'
       }))
     )
+
+    .use(feed({collection: 'posts'}))
+    .use(sitemap({
+      output: 'sitemap.xml',
+      urlProperty: 'path',
+      hostname: config.metalsmith.sitemapUrl,
+      defaults: {
+        priority: 0.5,
+        changefreq: 'daily'
+      }
+    }))
+
+    .use(wordcount({
+      metaKeyCount: 'wordCount',
+      metaKeyReadingTime: 'readingTime',
+      speed: 300,
+      seconds: false,
+      raw: false
+    }))
+
     .use(writemetadata({
       pattern: ['**/*.html'],
       ignorekeys: ['next', 'previous'],
@@ -142,9 +163,9 @@ module.exports = function(gulp, plugins, config) { return function() {
         }
       }
     }))
-    //.use(api())
+
     .build(function(err, files) {
       if (err) { console.log(err); }
     });
-
-};};
+  };
+};
