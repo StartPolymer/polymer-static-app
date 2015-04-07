@@ -6,7 +6,9 @@ module.exports = function(gulp, plugins, config) { return function() {
   var metalsmith    = require('gulpsmith')();
   var moment        = require('moment');
 
+  var branch        = require('metalsmith-branch');
   var collections   = require('metalsmith-collections');
+  var excerpts      = require('metalsmith-excerpts');
   var markdown      = require('metalsmith-markdownit');
   var metadata      = require('metalsmith-metadata');
   var permalinks    = require('metalsmith-permalinks');
@@ -39,31 +41,44 @@ module.exports = function(gulp, plugins, config) { return function() {
     .use(metadata({
       config: config.metalsmith.configFile
     }))
+
+    .use(findTemplate({
+      pattern: 'posts',
+      templateName: 'post.jade'
+    }))
     .use(markdown())
+    .use(excerpts())
+    .use(collections({
+      pages: {
+        pattern: 'pages/*.html'
+      },
+      posts: {
+        pattern: 'posts/*.html',
+        sortBy: 'date',
+        reverse: true
+      }
+    }))
     .use(templates({
       engine: 'jade',
-      directory: './templates',
+      directory: './app/templates',
       moment: moment
     }))
     //.use(ignore([
     //  'templates/**/*'
     //]))
-    .use(permalinks({
-      pattern: ':slug-:date',
-      date: 'YYYYMM'
-    }))
-    .use(collections({
-      pages: {
-        pattern: 'pages/*.md'
-      },
-      posts: {
-        pattern: 'posts/**/*.md',
-        sortBy: 'date',
-        reverse: true
-      }
-    }));
 
-  return gulp.src('./content/**/*.md')
+    .use(branch('posts/*')
+      .use(permalinks({
+        pattern: ':slug-:date',
+        date: 'YYYYMM'
+      }))
+    );
+
+
+  return gulp.src([
+      'app/content/**/*.md',
+      config.metalsmith.configFile
+    ])
 
     //.pipe(fmFilter)
 
