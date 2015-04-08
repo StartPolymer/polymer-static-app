@@ -1,0 +1,15 @@
+site:
+  title: Polymer Static App
+  description: Polymer Static Application is a boilerplate based on Polymer Starter Kit and Metalsmith.
+  url: http://polymer-static-app.startpolymer.org
+  author: Start Polymer
+
+dir:
+  content: psa
+  theme: psa
+
+lang:
+  default: en
+  list:
+    - cs
+    - en
