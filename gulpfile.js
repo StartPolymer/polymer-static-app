@@ -1,10 +1,15 @@
 'use strict';
 
 // Include Gulp, Plugins & Config
-var gulp = require('gulp');
-var plugins = require('gulp-load-plugins')();
-var browserSync = require('browser-sync');
-var config = require('./gulp/psa-config');
+var browserSync   = require('browser-sync');
+var fs            = require('fs');
+var gulp          = require('gulp');
+var plugins       = require('gulp-load-plugins')();
+var yaml          = require('js-yaml');
+
+//var config = require('./gulp/psa-config');
+var configFile = './configs/psa/tasks.yml';
+var config = yaml.safeLoad(fs.readFileSync(configFile, 'utf-8'));
 
 // Get a task from the tasks directory with default parameters
 function getTask(task) {
