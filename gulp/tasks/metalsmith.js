@@ -2,17 +2,18 @@
 
 // Metalsmith
 module.exports = function(gulp, plugins, config) { return function() {
-  var metalsmith    = require('metalsmith');
-  var moment        = require('moment');
+  var fs            = require('fs'),
+      merge         = require('merge'),
+      metalsmith    = require('metalsmith'),
+      moment        = require('moment'),
+      yaml          = require('js-yaml');
 
   var branch        = require('metalsmith-branch');
   var collections   = require('metalsmith-collections');
   var each          = require('metalsmith-each');
   var excerpts      = require('metalsmith-excerpts');
   var feed          = require('metalsmith-feed');
-  var ignore        = require('metalsmith-ignore');
   var markdown      = require('metalsmith-markdownit');
-  var metadata      = require('metalsmith-metadata');
   var permalinks    = require('metalsmith-permalinks');
   var sitemap       = require('metalsmith-sitemap');
   var tags          = require('metalsmith-tags');
@@ -22,15 +23,33 @@ module.exports = function(gulp, plugins, config) { return function() {
   var writemetadata = require('metalsmith-writemetadata');
 
   var buildDate = new Date();
+  var appConfig = yaml.safeLoad(fs.readFileSync(
+    './configs/' + config.metalsmith.config + '/app.yml',
+    'utf-8'
+  ));
+
+
+  function getPostsCollectionConfig() {
+    var conf = {};
+    var template = {
+      pattern: 'posts/**/*.LANG.md',
+      sortBy: 'date',
+      reverse: true
+    };
+    for (var x in appConfig.lang.list) {
+      var lang = appConfig.lang.list[x];
+      var clonedTemplate = merge(true, template);
+      clonedTemplate.pattern = template.pattern.replace('LANG', lang);
+      conf['posts-' + lang] = clonedTemplate;
+    }
+    return conf;
+  }
 
   return metalsmith('./')
-    .source(config.metalsmith.contentDir)
+    .source('contents/' + appConfig.dir.content)
     .destination('dist')
 
-    .use(metadata({
-      site: 'metadata/site.yaml'
-    }))
-    .use(ignore('metadata/*'))
+    .metadata(appConfig)
 
     .use(each(function(file, filename) {
       file.buildDate = buildDate;
@@ -70,12 +89,12 @@ module.exports = function(gulp, plugins, config) { return function() {
           exists: true,
           type: 'Date'
         },
-        modifyDate: {
+        'date_modify': {
           exists: true,
           type: 'Date'
         },
         author: true,
-        authorUrl: true,
+        'author_url': true,
         template: {
           default: 'post.jade'
         }
@@ -90,23 +109,19 @@ module.exports = function(gulp, plugins, config) { return function() {
       reverse: true
     }))
 
+    .use(collections(merge({
+      pages: {
+        pattern: 'pages/**/*.md'
+      }},
+      getPostsCollectionConfig()
+    )))
+
     .use(markdown())
     .use(excerpts())
 
-    .use(collections({
-      pages: {
-        pattern: 'pages/**/*.html'
-      },
-      posts: {
-        pattern: 'posts/**/*.html',
-        sortBy: 'date',
-        reverse: true
-      }
-    }))
-
     .use(templates({
       engine: 'jade',
-      directory: config.metalsmith.templatesDir,
+      directory: 'app/templates',
       moment: moment
     }))
 
@@ -125,25 +140,29 @@ module.exports = function(gulp, plugins, config) { return function() {
         pattern: ':lang/:slug-:date',
         date: 'YYYYMM'
       }))
+      .use(wordcount({
+        metaKeyCount: 'wordCount',
+        metaKeyReadingTime: 'readingTime',
+        speed: 300,
+        seconds: false,
+        raw: false
+      }))
     )
 
-    .use(feed({collection: 'posts'}))
+    .use(feed({
+      collection: 'posts-en',
+      limit: 10,
+      destination: 'feed.xml'
+    }))
+
     .use(sitemap({
       output: 'sitemap.xml',
       urlProperty: 'path',
-      hostname: config.metalsmith.sitemapUrl,
+      hostname: appConfig.site.url,
       defaults: {
         priority: 0.5,
         changefreq: 'daily'
       }
-    }))
-
-    .use(wordcount({
-      metaKeyCount: 'wordCount',
-      metaKeyReadingTime: 'readingTime',
-      speed: 300,
-      seconds: false,
-      raw: false
     }))
 
     .use(writemetadata({
@@ -151,9 +170,9 @@ module.exports = function(gulp, plugins, config) { return function() {
       ignorekeys: ['next', 'previous'],
       bufferencoding: 'utf8',
       collections: {
-        posts: {
+        'posts-en': {
           output: {
-            path: 'posts.json',
+            path: 'en/posts.json',
             asObject: true,
             metadata: {
               type: 'list'
